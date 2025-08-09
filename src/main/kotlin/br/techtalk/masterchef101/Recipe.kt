@@ -3,7 +3,6 @@ package br.techtalk.masterchef101
 import jakarta.persistence.*
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Null
 
 @Entity
 @Table(name = "recipes")
