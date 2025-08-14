@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles
 class RecipeSteps(private val recipeService: RecipeService) {
     private var createdRecipe: Recipe? = null
     private lateinit var currentRecipe: Recipe
-    private lateinit var currentRecipes: MutableList<Recipe>;
+    private lateinit var currentRecipes: MutableList<Recipe>
 
     @Given("que estou a criar uma receita")
     fun `i am creating a recipe`() {
