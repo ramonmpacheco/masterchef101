@@ -17,12 +17,19 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest
 @ActiveProfiles("test")
 class RecipeSteps(private val recipeService: RecipeService) {
-    private lateinit var currentRecipe: Recipe
     private var createdRecipe: Recipe? = null
+    private lateinit var currentRecipe: Recipe
+    private lateinit var currentRecipes: MutableList<Recipe>;
 
     @Given("que estou a criar uma receita")
     fun `i am creating a recipe`() {
         currentRecipe = Recipe()
+    }
+
+    @Given("que estou a criar varias receitas")
+    fun `i am creating recipes`() {
+        `i am creating a recipe`()
+        currentRecipes = mutableListOf()
     }
 
     @And("informo o nome do receita {string}")
@@ -40,15 +47,32 @@ class RecipeSteps(private val recipeService: RecipeService) {
         currentRecipe.stars = stars
     }
 
+    @And("adiciono a receita na lista")
+    fun `add recipe to the list`() {
+        currentRecipes.add(currentRecipe)
+    }
+
     @When("envio os dados da receita")
     fun `send the recipe data`() {
         createdRecipe = recipeService.save(currentRecipe)
+    }
+
+    @When("envio a lista com os dados da receita")
+    fun `send recipe data list`(){
+        currentRecipes.forEach {  createdRecipe=recipeService.save(it) }
     }
 
     @Then("a receita deve ser criada")
     fun `the recipe must be created`() {
         assertNotNull(createdRecipe)
         assertEquals(currentRecipe, createdRecipe)
+    }
+
+    @Then("as receitas devem ser criadas {string}")
+    fun `the recipes must be created`(name: String) {
+        val recipe = recipeService.findById(createdRecipe?.id ?: 0)
+        assertTrue(recipe.isPresent)
+        assertEquals(name, recipe.get().name)
     }
 
     @Then("a classificacao deve ser salva")
